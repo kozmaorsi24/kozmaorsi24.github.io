@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Az EU tagállamok digitális és pénzügyi fejlettsége</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface2: #f0f3f8;
+      --border: #dde2ed;
+      --accent: #2563eb;
+      --accent2: #d97706;
+      --accent3: #059669;
+      --accent4: #dc2626;
+      --text: #1a202c;
+      --muted: #64748b;
+      --developed: #2563eb;
+      --emerging: #d97706;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 60px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(255,255,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 40%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 32px; height: 2px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 700;
+      line-height: 1.1;
+      max-width: 800px;
+      margin-bottom: 24px;
+      color: #ffffff;
+    }
+
+    .hero h1 span {
+      color: #93c5fd;
+    }
+
+    .hero-desc {
+      max-width: 600px;
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 48px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item { }
+    .stat-num {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .stat-label {
+      font-size: 12px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .scroll-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #93c5fd;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* MAIN CONTENT */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* SECTION */
+    .section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .section-num {
+      font-size: 52px;
+      font-weight: 700;
+      color: #dde2ed;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .section-title-block h2 {
+      font-size: clamp(20px, 2.5vw, 30px);
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.25;
+      color: var(--text);
+    }
+
+    .section-title-block p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 680px;
+    }
+
+    /* CHART CARD */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .chart-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .chart-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 360px;
+    }
+
+    .chart-wrap-tall {
+      position: relative;
+      height: 460px;
+    }
+
+    .insight-box {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: #eff6ff;
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .insight-box strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* GRID */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* CONTROLS */
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .control-label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    select, button.btn {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    select:hover, button.btn:hover {
+      border-color: var(--accent);
+    }
+    button.btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* LEGEND DOTS */
+    .legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #475569;
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* RANKING TABLE */
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .rank-table th {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #64748b;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .rank-table td {
+      padding: 11px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    .rank-table tr:last-child td { border-bottom: none; }
+    .rank-table tr:hover td { background: #f8fafc; }
+
+    .bar-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .mini-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .badge-dev { background: rgba(79,142,247,0.15); color: var(--developed); }
+    .badge-em { background: rgba(247,194,79,0.15); color: var(--emerging); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 60px;
+      color: #64748b;
+      font-size: 13px;
+      background: #ffffff;
+    }
+    footer strong { color: var(--text); }
+
+    @media (max-width: 768px) {
+      .hero { padding: 60px 24px; }
+      .container { padding: 0 20px; }
+      .section { padding: 60px 0; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .hero-stats { gap: 28px; }
+      .section-num { font-size: 48px; }
+      footer { padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Adatvizualizáció Projekt · 2024</div>
+  <h1>Az EU tagállamok<br><span>digitális és pénzügyi</span><br>fejlettsége</h1>
+  <p class="hero-desc">
+    26 európai uniós tagállam összehasonlító elemzése 2014–2021 között: pénzügyi fejlettség, digitalizáció, korrupció, GDP és kormányzati hatékonyság vizsgálata.
+  </p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-num">26</div>
+      <div class="stat-label">Ország</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Év (2014–2021)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">22</div>
+      <div class="stat-label">Változó</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">208</div>
+      <div class="stat-label">Megfigyelés</div>
+    </div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-dot"></div>Görgess a vizualizációkhoz</div>
+</section>
+
+<!-- VIZ 1: Financial Development Index trend -->
+<div class="container">
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">01</div>
+      <div class="section-title-block">
+        <h2>Pénzügyi Fejlettségi Index (DFI) alakulása</h2>
+        <p>A Financial Development Index (DFI) az IMF által fejlesztett mutató, amely a pénzügyi intézmények és piacok mélységét, hozzáférhetőségét és hatékonyságát méri. Vizsgáljuk meg, hogyan változott ez az index 2014 és 2021 között.</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Átlagos DFI – Fejlett vs. Fejlődő EU-tagállamok</h3>
+      <p class="chart-meta">Éves átlagértékek, csoportonként bontva · Forrás: IMF Financial Development Index</p>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--developed)"></div>Fejlett tagállamok (14 ország)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--emerging)"></div>Fejlődő tagállamok (12 ország)</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="chart-dfi-trend"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Megfigyelés:</strong> A fejlett EU-tagállamok szignifikánsan magasabb DFI-értékeket mutatnak, míg a fejlődő tagállamok (pl. Bulgária, Románia) konszolidáltabb, de alacsonyabb szintű pénzügyi rendszerrel rendelkeznek. A 2020-as COVID-sokk mindkét csoportnál kisebb visszaesést okozott.
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>Pénzügyi Intézmények vs. Piacok</h3>
+        <p class="chart-meta">FII (intézményindex) és FMI (piacindex) összehasonlítása · 2021-es adatok</p>
+        <div class="chart-wrap">
+          <canvas id="chart-fii-fmi"></canvas>
+        </div>
+        <div class="insight-box">
+          <strong>Érdekesség:</strong> A fejlettebb tagállamokban (Svédország, Dánia, Hollandia) a pénzügyi piacok indexe kiemelkedő, míg fejlődő tagállamokban az intézményi oldal erősebb a piaci oldalnál.
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>DFI Komponenseinek megoszlása – 2021</h3>
+        <p class="chart-meta">Csoportátlagok: FIA (hozzáférés), FID (mélység), FIE (hatékonyság)</p>
+        <div class="chart-wrap">
+          <canvas id="chart-dfi-radar"></canvas>
+        </div>
+        <div class="insight-box">
+          <strong>Eredmény:</strong> A hozzáférhetőség (FIA) terén kisebb a különbség a két csoport között, míg a pénzügyi mélység (FID) és hatékonyság (FIE) jelenti a legnagyobb szakadékot.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIZ 2: GDP & Internet -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">02</div>
+      <div class="section-title-block">
+        <h2>GDP és Internethasználat összefüggése</h2>
+        <p>A digitális fejlettség és a gazdasági teljesítmény szorosan összefügg. Az internet-penetráció mértéke előrejelzője lehet a gazdasági fejlődésnek – de vajon az EU-n belül is igaz ez?</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>GDP vs. Internethasználat – Buborékdiagram</h3>
+      <p class="chart-meta">Minden pont egy ország–év megfigyelés · Buborék mérete = népességsűrűség · Forrás: World Bank, DESI</p>
+      <div class="controls">
+        <span class="control-label">Év:</span>
+        <select id="scatter-year">
+          <option value="2014">2014</option>
+          <option value="2015">2015</option>
+          <option value="2016">2016</option>
+          <option value="2017">2017</option>
+          <option value="2018">2018</option>
+          <option value="2019">2019</option>
+          <option value="2020">2020</option>
+          <option value="2021" selected>2021</option>
+        </select>
+      </div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--developed)"></div>Fejlett</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--emerging)"></div>Fejlődő</div>
+      </div>
+      <div class="chart-wrap-tall">
+        <canvas id="chart-scatter"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Főbb tanulság:</strong> A magasabb GDP/fő értékkel rendelkező országokban szinte kivétel nélkül magasabb az internethasználat is. Luxemburg és Dánia mindkét dimenzióban az élvonalban van, míg Bulgária és Románia a listán hátul szerepel.
+      </div>
+    </div>
+  </section>
+
+  <!-- VIZ 3: Korrupció és Kormányzás -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">03</div>
+      <div class="section-title-block">
+        <h2>Korrupcióérzékelés és Kormányzati Hatékonyság</h2>
+        <p>A Corruption Perceptions Index (CPI) és a Government Effectiveness (GE) mutató megmutatja, hogy mennyire átlátható és hatékony az egyes tagállamok közigazgatása – ez alapvetően meghatározza a befektetési légkört és a fejlődés lehetőségeit.</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Korrupcióérzékelési Index (CPI) – Országrangsor 2021</h3>
+      <p class="chart-meta">100 = teljesen korrupciómentesnek ítélt · Forrás: Transparency International</p>
+      <div id="cpi-ranking"></div>
+      <div class="insight-box">
+        <strong>Megfigyelés:</strong> A skandináv és Benelux-államok (Dánia, Svédország, Hollandia) vezetik a rangsort, míg a volt szocialista tagállamok (Bulgária, Románia, Magyarország) jelentősen lemaradnak. Ez komoly befektetési és fejlődési korlátot jelent.
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>CPI vs. Kormányzati Hatékonyság</h3>
+        <p class="chart-meta">2021-es adatok · Szoros összefüggés várható</p>
+        <div class="chart-wrap">
+          <canvas id="chart-cpi-ge"></canvas>
+        </div>
+        <div class="insight-box">
+          <strong>Eredmény:</strong> A CPI és GE mutatók között nagyon erős pozitív korreláció figyelhető meg – ahol alacsony a korrupció, ott hatékony a kormányzat is.
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Korrupció-kontroll (CC) időbeli változása</h3>
+        <p class="chart-meta">Kiválasztott országok · 2014–2021</p>
+        <div class="controls">
+          <span class="control-label">Csoport:</span>
+          <button class="btn active" id="cc-btn-all" onclick="setCCGroup('all')">Mind</button>
+          <button class="btn" id="cc-btn-dev" onclick="setCCGroup('dev')">Fejlett</button>
+          <button class="btn" id="cc-btn-em" onclick="setCCGroup('em')">Fejlődő</button>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="chart-cc-trend"></canvas>
+        </div>
+        <div class="insight-box">
+          <strong>Tanulság:</strong> A fejlettebb tagállamok korrupcióérzékelése stabil és magas szinten maradt, míg egyes fejlődő tagállamoknál (pl. Magyarország) csökkenő tendencia figyelhető meg.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIZ 4: E-kereskedelem és Connectivity -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">04</div>
+      <div class="section-title-block">
+        <h2>Digitális gazdaság: E-kereskedelem és Hálózatosodás</h2>
+        <p>Az e-kereskedelem elterjedtsége és a digitális kapcsolódás (CONNECT – DESI Connectivity index) a digitális egységes piac sikerének kulcsa. Nézzük meg, hol állnak az egyes tagállamok.</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>E-kereskedelem és CONNECT index – Fejlettségi csoportok szerint (2014–2021)</h3>
+      <p class="chart-meta">Éves csoportátlagok · Forrás: Eurostat DESI</p>
+      <div class="chart-wrap">
+        <canvas id="chart-ecomm-connect"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Fontos megfigyelés:</strong> Az e-kereskedelem és a hálózati kapcsolódás egyenletesen nőtt mindkét csoportban, de a fejlett és fejlődő tagállamok közötti digitális olló nem zárul be számottevően – sőt, egyes mutatóknál szélesedett.
+      </div>
+    </div>
+  </section>
+
+  <!-- VIZ 5: FDI és Iparosodás -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">05</div>
+      <div class="section-title-block">
+        <h2>Közvetlen Külföldi Befektetések (FDI) és Iparosodás</h2>
+        <p>A külföldi tőkebevonás és az iparosodás szintje meghatározza az ország gazdasági szerkezetét és fejlődési pályáját. Különösen érdekes megvizsgálni, hogyan alakult ez a COVID-19 idején.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="chart-card">
+        <h3>FDI (%GDP) – Csoportátlagok idősorban</h3>
+        <p class="chart-meta">2014–2021 · Külföldi közvetlen befektetések GDP %-ában</p>
+        <div class="chart-wrap">
+          <canvas id="chart-fdi"></canvas>
+        </div>
+        <div class="insight-box">
+          <strong>Megfigyelés:</strong> A fejlődő tagállamok arányaiban több FDI-t vonzanak, különösen a Balti-államok és Lengyelország. A 2020-as COVID-év mindkét csoportban visszaesést hozott.
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Iparosodás szintje – 2021-es keresztmetszet</h3>
+        <p class="chart-meta">Ipari hozzáadott érték a GDP %-ában · Mind a 26 tagállam</p>
+        <div class="chart-wrap">
+          <canvas id="chart-industry"></canvas>
+        </div>
+        <div class="insight-box">
+          <strong>Tanulság:</strong> A fejlődő tagállamok (Csehország, Szlovénia, Magyarország) sokkal ipari-orientáltabbak, míg a fejlett tagállamok a szolgáltatások felé tolódnak.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VIZ 6: Összesített Heatmap -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-num">06</div>
+      <div class="section-title-block">
+        <h2>Összesített Fejlettségi Profil</h2>
+        <p>Minden ország 2021-es értékeinek összehasonlítása hat kulcsdimenzióban: pénzügyi fejlettség, internethasználat, korrupció-kontroll, GDP/fő, e-kereskedelem és kormányzati hatékonyság.</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Fejlettségi Profil – Normalizált értékek (2021)</h3>
+      <p class="chart-meta">0–100 skálán normalizálva · Minél teljesebb a terület, annál fejlettebb az ország</p>
+      <div class="controls">
+        <span class="control-label">Ország:</span>
+        <select id="radar-country">
+          <option value="Denmark">Dánia</option>
+          <option value="Sweden">Svédország</option>
+          <option value="Netherlands">Hollandia</option>
+          <option value="Germany">Németország</option>
+          <option value="France">Franciaország</option>
+          <option value="Hungary">Magyarország</option>
+          <option value="Romania">Románia</option>
+          <option value="Bulgaria">Bulgária</option>
+          <option value="Poland">Lengyelország</option>
+          <option value="Czechia">Csehország</option>
+        </select>
+        <select id="radar-country2">
+          <option value="">-- Összehasonlítás --</option>
+          <option value="Denmark">Dánia</option>
+          <option value="Sweden">Svédország</option>
+          <option value="Netherlands">Hollandia</option>
+          <option value="Germany">Németország</option>
+          <option value="France">Franciaország</option>
+          <option value="Hungary" selected>Magyarország</option>
+          <option value="Romania">Románia</option>
+          <option value="Bulgaria">Bulgária</option>
+          <option value="Poland">Lengyelország</option>
+          <option value="Czechia">Csehország</option>
+        </select>
+      </div>
+      <div class="chart-wrap-tall">
+        <canvas id="chart-radar"></canvas>
+      </div>
+      <div class="insight-box">
+        <strong>Interaktív:</strong> Válassz ki két országot a legördülő menükből az összehasonlításhoz. Jól látható, hogy a fejlett tagállamok egyenletesebben magas profilokat mutatnak, míg a fejlődő tagállamok egyes dimenziókban kiemelkednek, másokban lemaradnak.
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="container">
+    <p><strong>Adatforrások:</strong> IMF Financial Development Index · World Bank WDI · Transparency International CPI · Eurostat DESI · World Bank Governance Indicators</p>
+    <p style="margin-top:8px;"><strong>Időszak:</strong> 2014–2021 · <strong>Terület:</strong> 26 EU tagállam · Adatvizualizáció & Adat Elemzés – Projekt</p>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+// ============================
+// HELPERS
+// ============================
+
+const DEVELOPED = ['Austria','Belgium','Denmark','United Kingdom','France','Greece','Netherlands','Ireland','Luxembourg','Germany','Italy','Portugal','Spain','Sweden'];
+const EMERGING = ['Bulgaria','Czechia','Estonia','Croatia','Poland','Latvia','Lithuania','Hungary','Malta','Romania','Slovakia','Slovenia'];
+
+const COUNTRY_HU = {
+  Austria:'Ausztria', Belgium:'Belgium', Bulgaria:'Bulgária', Croatia:'Horvátország',
+  Czechia:'Csehország', Denmark:'Dánia', Estonia:'Észtország', France:'Franciaország',
+  Germany:'Németország', Greece:'Görögország', Hungary:'Magyarország', Ireland:'Írország',
+  Italy:'Olaszország', Latvia:'Lettország', Lithuania:'Litvánia', Luxembourg:'Luxemburg',
+  Malta:'Málta', Netherlands:'Hollandia', Poland:'Lengyelország', Portugal:'Portugália',
+  Romania:'Románia', Slovakia:'Szlovákia', Slovenia:'Szlovénia', Spain:'Spanyolország',
+  Sweden:'Svédország', 'United Kingdom':'Egyesült Királyság'
+};
+
+const C = {
+  blue: '#4f8ef7', yellow: '#f7c24f', green: '#4ff7a8', red: '#f74f7c',
+  purple: '#b47ff7', teal: '#4ff7e8',
+  blueA: 'rgba(79,142,247,0.15)', yellowA: 'rgba(247,194,79,0.15)'
+};
+
+function byGroup(year) {
+  const rows = EU_DATA.filter(d => d.Ev === year);
+  const dev = rows.filter(d => DEVELOPED.includes(d.Orszag));
+  const em = rows.filter(d => EMERGING.includes(d.Orszag));
+  return {dev, em, all: rows};
+}
+
+function avg(arr, key) {
+  const vals = arr.map(d => d[key]).filter(v => v != null && !isNaN(v));
+  return vals.reduce((a,b)=>a+b,0) / vals.length;
+}
+
+function normalize(val, min, max) {
+  return ((val - min) / (max - min)) * 100;
+}
+
+const YEARS = [2014,2015,2016,2017,2018,2019,2020,2021];
+
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      labels: { color: '#475569', font: { family: 'Inter', size: 12 }, boxWidth: 12, padding: 16 }
+    },
+    tooltip: {
+      backgroundColor: '#1e293b',
+      borderColor: '#334155',
+      borderWidth: 1,
+      titleColor: '#f8fafc',
+      bodyColor: '#94a3b8',
+      padding: 12,
+      titleFont: { family: 'Inter', size: 13, weight: '600' }
+    }
+  },
+  scales: {
+    x: {
+      ticks: { color: '#64748b', font: { family: 'Inter', size: 11 } },
+      grid: { color: 'rgba(203,213,225,0.6)' }
+    },
+    y: {
+      ticks: { color: '#64748b', font: { family: 'Inter', size: 11 } },
+      grid: { color: 'rgba(203,213,225,0.6)' }
+    }
+  }
+};
+
+// ============================
+// CHART 1: DFI Trend
+// ============================
+(function() {
+  const devAvg = YEARS.map(y => avg(byGroup(y).dev, 'DFI_FDI'));
+  const emAvg  = YEARS.map(y => avg(byGroup(y).em,  'DFI_FDI'));
+
+  new Chart(document.getElementById('chart-dfi-trend'), {
+    type: 'line',
+    data: {
+      labels: YEARS,
+      datasets: [
+        {
+          label: 'Fejlett tagállamok',
+          data: devAvg,
+          borderColor: C.blue,
+          backgroundColor: C.blueA,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        },
+        {
+          label: 'Fejlődő tagállamok',
+          data: emAvg,
+          borderColor: C.yellow,
+          backgroundColor: C.yellowA,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }
+      ]
+    },
+    options: {
+      ...chartDefaults,
+      plugins: { ...chartDefaults.plugins },
+      scales: {
+        ...chartDefaults.scales,
+        y: { ...chartDefaults.scales.y, min: 0, max: 1,
+          ticks: { ...chartDefaults.scales.y.ticks, callback: v => v.toFixed(2) }
+        }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 2: FII vs FMI scatter (2021)
+// ============================
+(function() {
+  const rows2021 = EU_DATA.filter(d => d.Ev === 2021);
+  const devData = rows2021.filter(d => DEVELOPED.includes(d.Orszag)).map(d => ({x: d.DFI_FII, y: d.DFI_FMI, label: COUNTRY_HU[d.Orszag]}));
+  const emData  = rows2021.filter(d => EMERGING.includes(d.Orszag)).map(d => ({x: d.DFI_FII, y: d.DFI_FMI, label: COUNTRY_HU[d.Orszag]}));
+
+  new Chart(document.getElementById('chart-fii-fmi'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Fejlett', data: devData, backgroundColor: C.blue, pointRadius: 7 },
+        { label: 'Fejlődő', data: emData, backgroundColor: C.yellow, pointRadius: 7 }
+      ]
+    },
+    options: {
+      ...chartDefaults,
+      plugins: {
+        ...chartDefaults.plugins,
+        tooltip: {
+          ...chartDefaults.plugins.tooltip,
+          callbacks: { label: ctx => `${ctx.raw.label}: FII=${ctx.raw.x.toFixed(2)}, FMI=${ctx.raw.y.toFixed(2)}` }
+        }
+      },
+      scales: {
+        x: { ...chartDefaults.scales.x, title: { display: true, text: 'FII – Pénzügyi Intézmények Index', color: '#7a8aaa' } },
+        y: { ...chartDefaults.scales.y, title: { display: true, text: 'FMI – Pénzügyi Piacok Index', color: '#7a8aaa' } }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 3: DFI Components Radar
+// ============================
+(function() {
+  const rows2021 = EU_DATA.filter(d => d.Ev === 2021);
+  const dev = rows2021.filter(d => DEVELOPED.includes(d.Orszag));
+  const em  = rows2021.filter(d => EMERGING.includes(d.Orszag));
+  const keys = ['DFI_FIA','DFI_FID','DFI_FIE','DFI_FMA','DFI_FMD','DFI_FME'];
+  const labels = ['FIA\nHozzáférés','FID\nMélység','FIE\nHatékonyság','FMA\nPiac-Hozzáf.','FMD\nPiac-Mélység','FME\nPiac-Haték.'];
+
+  new Chart(document.getElementById('chart-dfi-radar'), {
+    type: 'radar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Fejlett', data: keys.map(k => avg(dev,k)), borderColor: C.blue, backgroundColor: C.blueA, pointBackgroundColor: C.blue },
+        { label: 'Fejlődő', data: keys.map(k => avg(em,k)),  borderColor: C.yellow, backgroundColor: C.yellowA, pointBackgroundColor: C.yellow }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: chartDefaults.plugins.legend, tooltip: chartDefaults.plugins.tooltip },
+      scales: {
+        r: {
+          min: 0, max: 1,
+          ticks: { color: '#64748b', font: { size: 10 }, stepSize: 0.25 },
+          grid: { color: 'rgba(203,213,225,0.7)' },
+          pointLabels: { color: '#475569', font: { size: 11, family: 'Inter' } },
+          angleLines: { color: 'rgba(203,213,225,0.7)' }
+        }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 4: GDP vs Internet Scatter (interactive)
+// ============================
+let scatterChart = null;
+function buildScatter(year) {
+  const rows = EU_DATA.filter(d => d.Ev === year);
+  const devData = rows.filter(d => DEVELOPED.includes(d.Orszag)).map(d => ({
+    x: d.INTERNET, y: d.GDP, label: COUNTRY_HU[d.Orszag], r: Math.max(6, Math.min(20, d.POPULATION / 40))
+  }));
+  const emData = rows.filter(d => EMERGING.includes(d.Orszag)).map(d => ({
+    x: d.INTERNET, y: d.GDP, label: COUNTRY_HU[d.Orszag], r: Math.max(6, Math.min(20, d.POPULATION / 40))
+  }));
+
+  if (scatterChart) scatterChart.destroy();
+  scatterChart = new Chart(document.getElementById('chart-scatter'), {
+    type: 'bubble',
+    data: {
+      datasets: [
+        { label: 'Fejlett', data: devData, backgroundColor: 'rgba(79,142,247,0.6)', borderColor: C.blue, borderWidth: 1 },
+        { label: 'Fejlődő', data: emData, backgroundColor: 'rgba(247,194,79,0.6)', borderColor: C.yellow, borderWidth: 1 }
+      ]
+    },
+    options: {
+      ...chartDefaults,
+      plugins: {
+        ...chartDefaults.plugins,
+        tooltip: {
+          ...chartDefaults.plugins.tooltip,
+          callbacks: {
+            label: ctx => `${ctx.raw.label}: Internet=${ctx.raw.x.toFixed(1)}%, GDP=${Math.round(ctx.raw.y).toLocaleString('hu-HU')} USD/fő`
+          }
+        }
+      },
+      scales: {
+        x: { ...chartDefaults.scales.x, title: { display: true, text: 'Internethasználat (%)', color: '#7a8aaa' }, min: 40, max: 100 },
+        y: { ...chartDefaults.scales.y, title: { display: true, text: 'GDP/fő (USD)', color: '#7a8aaa' } }
+      }
+    }
+  });
+}
+buildScatter(2021);
+document.getElementById('scatter-year').addEventListener('change', e => buildScatter(+e.target.value));
+
+// ============================
+// CHART 5: CPI Ranking table
+// ============================
+(function() {
+  const rows2021 = EU_DATA.filter(d => d.Ev === 2021).sort((a,b) => b.CPI - a.CPI);
+  const max = rows2021[0].CPI;
+  const container = document.getElementById('cpi-ranking');
+  const table = document.createElement('table');
+  table.className = 'rank-table';
+  table.innerHTML = `<thead><tr><th>#</th><th>Ország</th><th>Csoport</th><th>CPI Érték</th><th style="min-width:200px">Sáv</th></tr></thead>`;
+  const tbody = document.createElement('tbody');
+  rows2021.forEach((d, i) => {
+    const isDev = DEVELOPED.includes(d.Orszag);
+    const pct = (d.CPI / max * 100).toFixed(1);
+    const color = isDev ? C.blue : C.yellow;
+    tbody.innerHTML += `
+      <tr>
+        <td style="color:var(--muted);font-size:12px">${i+1}</td>
+        <td style="font-weight:500">${COUNTRY_HU[d.Orszag]}</td>
+        <td><span class="badge ${isDev?'badge-dev':'badge-em'}">${isDev?'Fejlett':'Fejlődő'}</span></td>
+        <td style="font-family:'Syne',sans-serif;font-weight:700;color:${color}">${d.CPI}</td>
+        <td>
+          <div class="bar-cell">
+            <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+            <span style="font-size:12px;color:var(--muted);width:32px">${pct}%</span>
+          </div>
+        </td>
+      </tr>`;
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+})();
+
+// ============================
+// CHART 6: CPI vs GE Scatter
+// ============================
+(function() {
+  const rows2021 = EU_DATA.filter(d => d.Ev === 2021);
+  const devData = rows2021.filter(d => DEVELOPED.includes(d.Orszag)).map(d => ({x: d.CPI, y: d.GE, label: COUNTRY_HU[d.Orszag]}));
+  const emData  = rows2021.filter(d => EMERGING.includes(d.Orszag)).map(d => ({x: d.CPI, y: d.GE, label: COUNTRY_HU[d.Orszag]}));
+
+  new Chart(document.getElementById('chart-cpi-ge'), {
+    type: 'scatter',
+    data: {
+      datasets: [
+        { label: 'Fejlett', data: devData, backgroundColor: C.blue, pointRadius: 7 },
+        { label: 'Fejlődő', data: emData, backgroundColor: C.yellow, pointRadius: 7 }
+      ]
+    },
+    options: {
+      ...chartDefaults,
+      plugins: {
+        ...chartDefaults.plugins,
+        tooltip: {
+          ...chartDefaults.plugins.tooltip,
+          callbacks: { label: ctx => `${ctx.raw.label}: CPI=${ctx.raw.x}, GE=${ctx.raw.y.toFixed(1)}` }
+        }
+      },
+      scales: {
+        x: { ...chartDefaults.scales.x, title: { display: true, text: 'CPI – Korrupcióérzékelés', color: '#7a8aaa' } },
+        y: { ...chartDefaults.scales.y, title: { display: true, text: 'GE – Kormányzati Hatékonyság', color: '#7a8aaa' } }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 7: CC Trend
+// ============================
+let ccChart = null;
+function buildCC(group) {
+  const HIGHLIGHT_DEV = ['Denmark','Sweden','Netherlands','Germany','France'];
+  const HIGHLIGHT_EM  = ['Bulgaria','Romania','Hungary','Poland','Czechia'];
+  const countries = group === 'dev' ? HIGHLIGHT_DEV : group === 'em' ? HIGHLIGHT_EM : [...HIGHLIGHT_DEV.slice(0,3), ...HIGHLIGHT_EM.slice(0,3)];
+  const colors = [C.blue, C.teal, C.green, C.yellow, C.red, C.purple];
+
+  const datasets = countries.map((c, i) => ({
+    label: COUNTRY_HU[c],
+    data: YEARS.map(y => { const row = EU_DATA.find(d => d.Ev === y && d.Orszag === c); return row ? row.CC : null; }),
+    borderColor: colors[i % colors.length],
+    backgroundColor: 'transparent',
+    tension: 0.4,
+    pointRadius: 4
+  }));
+
+  if (ccChart) ccChart.destroy();
+  ccChart = new Chart(document.getElementById('chart-cc-trend'), {
+    type: 'line',
+    data: { labels: YEARS, datasets },
+    options: { ...chartDefaults }
+  });
+
+  ['all','dev','em'].forEach(g => document.getElementById(`cc-btn-${g}`).classList.remove('active'));
+  document.getElementById(`cc-btn-${group}`).classList.add('active');
+}
+window.setCCGroup = buildCC;
+buildCC('all');
+
+// ============================
+// CHART 8: E-commerce & Connect
+// ============================
+(function() {
+  const devEcomm = YEARS.map(y => avg(byGroup(y).dev, 'E_COMM'));
+  const emEcomm  = YEARS.map(y => avg(byGroup(y).em,  'E_COMM'));
+  const devConn  = YEARS.map(y => avg(byGroup(y).dev, 'CONNECT'));
+  const emConn   = YEARS.map(y => avg(byGroup(y).em,  'CONNECT'));
+
+  new Chart(document.getElementById('chart-ecomm-connect'), {
+    type: 'bar',
+    data: {
+      labels: YEARS,
+      datasets: [
+        { label: 'Fejlett – E-kereskedelem', data: devEcomm, backgroundColor: C.blue, stack: 'a' },
+        { label: 'Fejlődő – E-kereskedelem', data: emEcomm,  backgroundColor: C.yellow, stack: 'b' },
+        { label: 'Fejlett – CONNECT', data: devConn, backgroundColor: C.teal, type: 'line', tension: 0.4, fill: false, yAxisID: 'y2', pointRadius: 4, borderColor: C.teal },
+        { label: 'Fejlődő – CONNECT', data: emConn,  backgroundColor: C.red,  type: 'line', tension: 0.4, fill: false, yAxisID: 'y2', pointRadius: 4, borderColor: C.red }
+      ]
+    },
+    options: {
+      ...chartDefaults,
+      scales: {
+        ...chartDefaults.scales,
+        y: { ...chartDefaults.scales.y, title: { display: true, text: 'E-kereskedelem (%)', color: '#7a8aaa' } },
+        y2: {
+          type: 'linear', position: 'right',
+          ticks: { color: '#7a8aaa', font: { size: 11 } },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'CONNECT index', color: '#7a8aaa' }
+        }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 9: FDI trend
+// ============================
+(function() {
+  const devFdi = YEARS.map(y => avg(byGroup(y).dev, 'FDI'));
+  const emFdi  = YEARS.map(y => avg(byGroup(y).em,  'FDI'));
+
+  new Chart(document.getElementById('chart-fdi'), {
+    type: 'line',
+    data: {
+      labels: YEARS,
+      datasets: [
+        { label: 'Fejlett', data: devFdi, borderColor: C.blue, backgroundColor: C.blueA, fill: true, tension: 0.4, pointRadius: 5 },
+        { label: 'Fejlődő', data: emFdi,  borderColor: C.yellow, backgroundColor: C.yellowA, fill: true, tension: 0.4, pointRadius: 5 }
+      ]
+    },
+    options: {
+      ...chartDefaults,
+      scales: {
+        ...chartDefaults.scales,
+        y: { ...chartDefaults.scales.y, title: { display: true, text: 'FDI (GDP %)', color: '#7a8aaa' } }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 10: Industrialization bar
+// ============================
+(function() {
+  const rows2021 = EU_DATA.filter(d => d.Ev === 2021).sort((a,b) => b.INDUST - a.INDUST);
+  const labels = rows2021.map(d => COUNTRY_HU[d.Orszag]);
+  const data = rows2021.map(d => d.INDUST);
+  const colors = rows2021.map(d => DEVELOPED.includes(d.Orszag) ? C.blue : C.yellow);
+
+  new Chart(document.getElementById('chart-industry'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{ label: 'Iparosodás (GDP %)', data, backgroundColor: colors }]
+    },
+    options: {
+      ...chartDefaults,
+      indexAxis: 'y',
+      plugins: { ...chartDefaults.plugins, legend: { display: false } },
+      scales: {
+        x: { ...chartDefaults.scales.x, title: { display: true, text: 'Ipari hozzáadott érték (%GDP)', color: '#7a8aaa' } },
+        y: { ...chartDefaults.scales.y, ticks: { ...chartDefaults.scales.y.ticks, font: { size: 10 } } }
+      }
+    }
+  });
+})();
+
+// ============================
+// CHART 11: Radar Country Profile
+// ============================
+let radarChart = null;
+function buildRadar() {
+  const c1 = document.getElementById('radar-country').value;
+  const c2 = document.getElementById('radar-country2').value;
+
+  const KEYS = ['DFI_FDI','INTERNET','CC','GDP','E_COMM','GE'];
+  const LABELS = ['Pénzügyi\nFejlettség','Internet-\nhasználat','Korrupció-\nkontroll','GDP/fő','E-\nkereskedelem','Kormányzati\nHatékonyság'];
+
+  const mins = KEYS.map(k => Math.min(...EU_DATA.map(d => d[k]).filter(v => v != null)));
+  const maxs = KEYS.map(k => Math.max(...EU_DATA.map(d => d[k]).filter(v => v != null)));
+
+  function getRadarData(country) {
+    const row = EU_DATA.find(d => d.Ev === 2021 && d.Orszag === country);
+    if (!row) return null;
+    return KEYS.map((k, i) => normalize(row[k], mins[i], maxs[i]));
+  }
+
+  const datasets = [
+    {
+      label: COUNTRY_HU[c1] || c1,
+      data: getRadarData(c1),
+      borderColor: C.blue,
+      backgroundColor: 'rgba(79,142,247,0.2)',
+      pointBackgroundColor: C.blue,
+      pointRadius: 5
+    }
+  ];
+
+  if (c2) {
+    datasets.push({
+      label: COUNTRY_HU[c2] || c2,
+      data: getRadarData(c2),
+      borderColor: C.yellow,
+      backgroundColor: 'rgba(247,194,79,0.15)',
+      pointBackgroundColor: C.yellow,
+      pointRadius: 5
+    });
+  }
+
+  if (radarChart) radarChart.destroy();
+  radarChart = new Chart(document.getElementById('chart-radar'), {
+    type: 'radar',
+    data: { labels: LABELS, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: chartDefaults.plugins.legend, tooltip: {
+        ...chartDefaults.plugins.tooltip,
+        callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}/100` }
+      }},
+      scales: {
+        r: {
+          min: 0, max: 100,
+          ticks: { color: '#64748b', font: { size: 10 }, stepSize: 25, backdropColor: 'transparent' },
+          grid: { color: 'rgba(203,213,225,0.6)' },
+          pointLabels: { color: '#374151', font: { size: 12, family: 'Inter' } },
+          angleLines: { color: 'rgba(203,213,225,0.6)' }
+        }
+      }
+    }
+  });
+}
+buildRadar();
+document.getElementById('radar-country').addEventListener('change', buildRadar);
+document.getElementById('radar-country2').addEventListener('change', buildRadar);
+</script>
+</body>
+</html>
